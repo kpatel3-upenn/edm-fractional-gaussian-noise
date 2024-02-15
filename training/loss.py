@@ -99,7 +99,7 @@ class EDMLoss_fractional_gaussian:
         return loss
 
 # Correction factors empirically determined for fractional Gaussian noise
-fractional_gaussian_correction_factors = { 240: 4.8834 }
+fractional_gaussian_correction_factors = { 128: 4.3022, 240: 4.8834, 256: 4.9422 }
 def rand_fractional_gaussian(shape, alpha=1, device=None):
     if shape[-1] not in fractional_gaussian_correction_factors:
         raise ValueError(f'Correction factor for fractional Gaussian noise not available for shape {shape}')
