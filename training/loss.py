@@ -9,6 +9,7 @@
 "Elucidating the Design Space of Diffusion-Based Generative Models"."""
 
 import torch
+import numpy as np
 from torch_utils import persistence
 
 #----------------------------------------------------------------------------
