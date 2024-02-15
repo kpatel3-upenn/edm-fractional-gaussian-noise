@@ -125,7 +125,7 @@ def rand_fractional_gaussian(shape, alpha=1, device=None):
     return noise
 
 
-def randn_fractional_gaussian_like(input_tensor, alpha=1):
+def rand_fractional_gaussian_like(input_tensor, alpha=1):
     shape = input_tensor.shape
     device = input_tensor.device
     dtype = input_tensor.dtype  # Extract dtype of the input tensor
