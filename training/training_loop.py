@@ -16,6 +16,7 @@ import psutil
 import numpy as np
 import torch
 import dnnlib
+import PIL
 from torch_utils import distributed as dist
 from torch_utils import training_stats
 from torch_utils import misc
