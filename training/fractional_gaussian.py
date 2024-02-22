@@ -1,6 +1,6 @@
 
 
-# fractional_gaussian_correction_factors = {128: 4.3022, 240: 4.8834, 256: 4.9422}
+fractional_gaussian_correction_factors = {128: 4.3022, 240: 4.8834, 256: 4.9422}
 
 def rand_fractional_gaussian(shape, generator=None, alpha=1, device=None):
     if shape[-1] not in fractional_gaussian_correction_factors:
