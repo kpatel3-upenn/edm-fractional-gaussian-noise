@@ -156,7 +156,7 @@ def training_loop(
             continue
 
         # Perform validation sampling
-        with torch.no_grad:
+        with torch.no_grad():
             ddp.eval()
             seeds = [0, 1, 2, 3]
             rnd = StackedRandomGenerator(device, seeds)
