@@ -19,7 +19,7 @@ import dnnlib
 from torch_utils import distributed as dist
 from torch_utils import training_stats
 from torch_utils import misc
-from training.generate import edm_sampler, StackedRandomGenerator
+from generate import edm_sampler, StackedRandomGenerator
 from fractional_gaussian import rand_fractional_gaussian_like
 
 #----------------------------------------------------------------------------
