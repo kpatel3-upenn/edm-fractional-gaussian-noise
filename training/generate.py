@@ -18,7 +18,7 @@ import torch
 import PIL.Image
 import dnnlib
 from torch_utils import distributed as dist
-from fractional_gaussian import rand_fractional_gaussian, rand_fractional_gaussian_like
+from .fractional_gaussian import rand_fractional_gaussian, rand_fractional_gaussian_like
 
 #----------------------------------------------------------------------------
 # Proposed EDM sampler (Algorithm 2).
