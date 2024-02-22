@@ -20,7 +20,7 @@ from torch_utils import distributed as dist
 from torch_utils import training_stats
 from torch_utils import misc
 from generate import edm_sampler, StackedRandomGenerator
-from fractional_gaussian import rand_fractional_gaussian_like
+from training.fractional_gaussian import rand_fractional_gaussian_like
 
 #----------------------------------------------------------------------------
 

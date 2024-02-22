@@ -11,7 +11,7 @@
 import torch
 import numpy as np
 from torch_utils import persistence
-from fractional_gaussian import rand_fractional_gaussian_like
+from training.fractional_gaussian import rand_fractional_gaussian_like
 
 #----------------------------------------------------------------------------
 # Loss function corresponding to the variance preserving (VP) formulation
