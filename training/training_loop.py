@@ -20,6 +20,7 @@ from torch_utils import distributed as dist
 from torch_utils import training_stats
 from torch_utils import misc
 from generate import edm_sampler, StackedRandomGenerator
+from fractional_gaussian import rand_fractional_gaussian_like
 
 #----------------------------------------------------------------------------
 
@@ -160,7 +161,7 @@ def training_loop(
             seeds = [0, 1, 2, 3]
             rnd = StackedRandomGenerator(device, seeds)
             latents = rnd.randfg([4, net.img_channels, net.img_resolution, net.img_resolution], device=device)
-            images = edm_sampler(ddp.module, latents)
+            images = edm_sampler(ddp.module, latents, randn_like=rand_fractional_gaussian_like)
 
             images_np = (images * 127.5 + 128).clip(0, 255).to(torch.uint8).permute(0, 2, 3, 1).cpu().numpy()
             b, h, w, c = images_np.shape
