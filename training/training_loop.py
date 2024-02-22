@@ -19,6 +19,7 @@ import dnnlib
 from torch_utils import distributed as dist
 from torch_utils import training_stats
 from torch_utils import misc
+from generate import edm_sampler, StackedRandomGenerator
 
 #----------------------------------------------------------------------------
 
@@ -152,6 +153,26 @@ def training_loop(
         done = (cur_nimg >= total_kimg * 1000)
         if (not done) and (cur_tick != 0) and (cur_nimg < tick_start_nimg + kimg_per_tick * 1000):
             continue
+
+        # Perform validation sampling
+        with torch.no_grad:
+            ddp.eval()
+            seeds = [0, 1, 2, 3]
+            rnd = StackedRandomGenerator(device, seeds)
+            latents = rnd.randfg([4, net.img_channels, net.img_resolution, net.img_resolution], device=device)
+            images = edm_sampler(ddp.module, latents)
+
+            images_np = (images * 127.5 + 128).clip(0, 255).to(torch.uint8).permute(0, 2, 3, 1).cpu().numpy()
+            b, h, w, c = images_np.shape
+            images_np = images_np.reshape(h * b, w, c)
+            image_path = f'{run_dir}/validation_images/{str(cur_tick).zfill(3)}_{"".join(str(s) for s in seeds)}.png'
+            if images_np.shape[2] == 1:
+                images_pil = PIL.Image.fromarray(images_np[:, :, 0], 'L')
+                images_pil.save(image_path)
+            else:
+                images_pil = PIL.Image.fromarray(images_np, 'RGB')
+                images_pil.save(image_path)
+            ddp.train()
 
         # Print status line, accumulating the same information in training_stats.
         tick_end_time = time.time()

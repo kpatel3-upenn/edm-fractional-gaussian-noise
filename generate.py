@@ -18,6 +18,7 @@ import torch
 import PIL.Image
 import dnnlib
 from torch_utils import distributed as dist
+from fractional_gaussian import rand_fractional_gaussian
 
 #----------------------------------------------------------------------------
 # Proposed EDM sampler (Algorithm 2).
@@ -190,6 +191,15 @@ class StackedRandomGenerator:
 
     def randn_like(self, input):
         return self.randn(input.shape, dtype=input.dtype, layout=input.layout, device=input.device)
+
+    def randfg(self, size, device=None):
+        assert size[0] == len(self.generators)
+        return torch.stack([rand_fractional_gaussian(size[1:], generator=gen, device=device) for gen in self.generators])
+
+    def randfg_like(self, input):
+        assert input.shape[0] == len(self.generators)
+        return torch.stack([rand_fractional_gaussian_like(input[1:], generator=gen) for gen in self.generators])
+
 
     def randint(self, *args, size, **kwargs):
         assert size[0] == len(self.generators)
