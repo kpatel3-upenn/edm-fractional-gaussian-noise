@@ -1,3 +1,5 @@
+import torch
+import numpy as np
 
 
 fractional_gaussian_correction_factors = {128: 4.3022, 240: 4.8834, 256: 4.9422}
