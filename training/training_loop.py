@@ -167,7 +167,7 @@ def training_loop(
             images_np = (images * 127.5 + 128).clip(0, 255).to(torch.uint8).permute(0, 2, 3, 1).cpu().numpy()
             b, h, w, c = images_np.shape
             images_np = images_np.reshape(h * b, w, c)
-            image_folder_path = f'{run_dir}/validation_images'
+            image_folder_path = f'{run_dir}/validation_images/'
             image_path = f'{run_dir}/validation_images/{str(cur_tick).zfill(3)}_{"".join(str(s) for s in seeds)}.png'
             # Create directory that goes to the image path if it doesn't already exist
             os.makedirs(os.path.dirname(image_folder_path), exist_ok=True)
