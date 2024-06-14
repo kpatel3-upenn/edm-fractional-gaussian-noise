@@ -1,0 +1,11 @@
+.vscode
+__pycache__
+**/__pycache__/
+experiments/
+wandb/
+*.pt
+*.pth
+*.nii
+*.nii.gz
+*.png
+*.json
