@@ -61,7 +61,7 @@ def edm_sampler(
     return x_next
 
 
-# Note this function is for non-stochastic forward steps only
+# Note this function is for non-stochastic reverse steps only
 def edm_sampler_intermediate_steps(net, latents, class_labels=None, randn_like=torch.randn_like,
     start_step=0, end_step=18,
     sigma_min=0.002, sigma_max=80, rho=7,
@@ -80,12 +80,8 @@ def edm_sampler_intermediate_steps(net, latents, class_labels=None, randn_like=t
     # Main sampling loop.
     x_next = latents.to(torch.float64)
     for i, (t_cur, t_next) in enumerate(zip(t_steps[:-1], t_steps[1:])):  # Start step, ..., End step - 1
-        x_cur = x_next
-
-        # Increase noise temporarily.
-        gamma = min(S_churn / num_steps, np.sqrt(2) - 1) if S_min <= t_cur <= S_max else 0
-        t_hat = net.round_sigma(t_cur + gamma * t_cur)
-        x_hat = x_cur + (t_hat ** 2 - t_cur ** 2).sqrt() * S_noise * randn_like(x_cur)
+        x_hat = x_next
+        t_hat = t_cur
 
         # Euler step.
         denoised = net(x_hat, t_hat, class_labels).to(torch.float64)
@@ -101,8 +97,8 @@ def edm_sampler_intermediate_steps(net, latents, class_labels=None, randn_like=t
     return x_next
 
 
-# Note this function is for non-stochastic forward steps only
-def forward_edm_sampler(
+# Note this function is for non-stochastic reverse steps only
+def reverse_edm_sampler(
     net, latents, class_labels=None, randn_like=torch.randn_like,
     num_steps=18, sigma_min=0.002, sigma_max=80, rho=7,
     S_churn=0, S_min=0, S_max=float('inf'), S_noise=1,
@@ -119,12 +115,8 @@ def forward_edm_sampler(
     # Main sampling loop.
     x_next = latents.to(torch.float64)
     for i, (t_cur, t_next) in enumerate(zip(t_steps.flip(0)[:-1], t_steps.flip(0)[1:])):  # 0, ..., N-1
-        x_cur = x_next
-
-        # Increase noise temporarily.
-        gamma = min(S_churn / num_steps, np.sqrt(2) - 1) if S_min <= t_cur <= S_max else 0
-        t_hat = net.round_sigma(t_cur + gamma * t_cur)
-        x_hat = x_cur + (t_hat ** 2 - t_cur ** 2).sqrt() * S_noise * randn_like(x_cur)
+        x_hat = x_next
+        t_hat = t_cur
 
         # Euler step.
         denoised = net(x_hat, t_hat, class_labels).to(torch.float64)
@@ -140,7 +132,7 @@ def forward_edm_sampler(
     return x_next
 
 
-# Simple noising w/out evaluating forward ODE
+# Simple noising w/out evaluating reverse ODE
 def add_noise_at_time(image, time, randn_like=torch.randn_like):
     return image + randn_like(image) * time  # raise to noise level sigma at time step t assuming linear schedule
 
